@@ -220,7 +220,7 @@ perform(firstName.value.trim(),lastName.value.trim(),street.value.trim(),address
         async function createCustomer(bearerToken,customerDetails)
         {
         	alert("creating...")
-        	const response = await fetch('http://localhost:8080/api/addCustomer', {
+        	const response = await fetch('https://scrawny-war-production.up.railway.app/api/addCustomer', {
                 method: 'POST',
                 headers: {
               	  'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ perform(firstName.value.trim(),lastName.value.trim(),street.value.trim(),address
         {
         	
         	alert("updating...");
-    		const response = await fetch(`http://localhost:8080/api/updateCustomer?uuid=${uuid}`,{
+    		const response = await fetch(`https://scrawny-war-production.up.railway.app/api/updateCustomer?uuid=${uuid}`,{
     			method:'POST',
     			 headers: {
                  	  'Content-Type': 'application/json',

@@ -23,7 +23,7 @@
     // and handle the response
     const makeApiRequest= (loginData)=>{
     	alert('checking credentials');
-    	return fetch('http://localhost:8080/api/authenticate', {
+    	return fetch('https://scrawny-war-production.up.railway.app/api/authenticate', {
              method: 'POST',
              headers: {
            	  'Content-Type': 'application/json',

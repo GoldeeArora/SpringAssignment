@@ -73,7 +73,7 @@
 	    const bearerToken = localStorage.getItem('accessToken'); // Replace this with your actual bearer token
         console.log(bearerToken)
 	    // Make the GET request to the API with the Authorization header
-	    const response = await fetch('http://localhost:8080/api/getAllCustomers', {
+	    const response = await fetch('https://scrawny-war-production.up.railway.app/api/getAllCustomers', {
           method: 'GET',
           headers: {
         	  'Content-Type': 'application/json',
@@ -158,7 +158,7 @@
        console.log(uuid)
        alert("Deleting...")
 	    // Make the GET request to the API with the Authorization header
-	    const response = await fetch(`http://localhost:8080/api/deleteCustomer?uuid=${uuid}`, {
+	    const response = await fetch(`https://scrawny-war-production.up.railway.app/api/deleteCustomer?uuid=${uuid}`, {
           method: 'POST',
           headers: {
         	  'Content-Type': 'application/json',
