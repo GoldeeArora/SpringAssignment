@@ -51,19 +51,22 @@ public class ProxyController {
 
                 return ans;
         }
-        public String getDeleteData(String data)
-        {
-           int ind = data.indexOf("<");
-           int i = ind+1;
-           String ans = data.substring(i,i+3);
-           return ans;
+
+        public String getDeleteData(String data) {
+                int ind = data.indexOf("<");
+                int i = ind + 1;
+                String ans = data.substring(i, i + 3);
+                return ans;
         }
-public String getDataFromcreateCustomer(String data) {
-	if(data==null) return null;
-	int ind = data.indexOf("<");
-	int i = ind + 1;
-	return data.substring(i,i+3);
-}
+
+        public String getDataFromcreateCustomer(String data) {
+                if (data == null)
+                        return null;
+                int ind = data.indexOf("<");
+                int i = ind + 1;
+                return data.substring(i, i + 3);
+        }
+
         @PostMapping("/authenticate")
         public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
                 // Replace LoginRequest with your actual request body class
@@ -117,8 +120,11 @@ public String getDataFromcreateCustomer(String data) {
                 // frontend domain
                 HttpHeaders headers = new HttpHeaders();
                 // System.out.println(token);
-                headers.set("Access-Control-Allow-Origin", "http://localhost:8080"); // Replace with your frontend
-                                                                                     // domain
+                headers.set("Access-Control-Allow-Origin", "https://scrawny-war-production.up.railway.app/"); // Replace
+                                                                                                              // with
+                                                                                                              // your
+                                                                                                              // frontend
+                // domain
                 ExternalApiResponse response = new ExternalApiResponse(token);
                 // Return the data received from the external API along with the authenticated
                 // user
@@ -127,16 +133,15 @@ public String getDataFromcreateCustomer(String data) {
 
         }
 
-
         @GetMapping("/getAllCustomers")
         public ResponseEntity<?> getDataWithBearerToken(@RequestHeader("Authorization") String authorizationHeader) {
-//                System.out.println("Api for getting all customers is getting called");
+                // System.out.println("Api for getting all customers is getting called");
                 // try {
                 // Create the request headers and add the bearer token to the Authorization
                 // header
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Authorization", authorizationHeader);
-//                System.out.println(authorizationHeader);
+                // System.out.println(authorizationHeader);
                 // Create the request entity with headers
                 HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
@@ -146,7 +151,7 @@ public String getDataFromcreateCustomer(String data) {
                 // Make the GET request to the external API
                 RestTemplate restTemplate = new RestTemplate();
                 String responseEntity = restTemplate.exchange(apiUrl, HttpMethod.GET, requestEntity, String.class) + "";
-//                System.out.println(responseEntity + "line 107");
+                // System.out.println(responseEntity + "line 107");
                 // Return the response from the external API as-is or customize it if needed
                 responseEntity = getUsefulData(responseEntity);
                 return new ResponseEntity<>(new ApiResponse(responseEntity), HttpStatus.OK);
@@ -156,9 +161,9 @@ public String getDataFromcreateCustomer(String data) {
         @PostMapping("/deleteCustomer")
         public ResponseEntity<?> deleteCustomer(@RequestHeader("Authorization") String bearerToken,
                         @RequestParam("uuid") String uuid) {
-        	System.out.println("we are calling the delete user method");
-        	System.out.println(uuid);
-        	System.out.println(bearerToken);
+                System.out.println("we are calling the delete user method");
+                System.out.println(uuid);
+                System.out.println(bearerToken);
                 String apiUrl = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=delete&uuid=" + uuid;
                 HttpHeaders headers = new HttpHeaders();
 
@@ -167,39 +172,38 @@ public String getDataFromcreateCustomer(String data) {
                 RestTemplate restTemplate = new RestTemplate();
                 String responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class)
                                 + "";
-//                System.out.println(responseEntity);
+                // System.out.println(responseEntity);
                 responseEntity = getDeleteData(responseEntity);
                 System.out.println(responseEntity);
-                if(responseEntity.equals("200"))
-                {
-                	System.out.println("we deleted successfully");
-                	return new ResponseEntity<>(new ApiResponse("We have deleted Successfully"),HttpStatus.OK);
+                if (responseEntity.equals("200")) {
+                        System.out.println("we deleted successfully");
+                        return new ResponseEntity<>(new ApiResponse("We have deleted Successfully"), HttpStatus.OK);
                 }
-                return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-        
+
         @PostMapping("/addCustomer")
-        public ResponseEntity<?> addCustomer(@RequestHeader("Authorization") String bearerToken,@RequestBody CustomerDetails customerDetails) {
+        public ResponseEntity<?> addCustomer(@RequestHeader("Authorization") String bearerToken,
+                        @RequestBody CustomerDetails customerDetails) {
                 // Replace LoginRequest with your actual request body class
                 // The class should have fields for login_id and password
-System.out.println("we are here to add a new customer");
+                System.out.println("we are here to add a new customer");
                 // Get the login_id and password from the request body
                 String first_name = customerDetails.getFirst_name();
                 String last_name = customerDetails.getLast_name();
                 String street = customerDetails.getStreet();
                 String address = customerDetails.getAddress();
-                String city= customerDetails.getCity();
+                String city = customerDetails.getCity();
                 String state = customerDetails.getState();
                 String email = customerDetails.getEmail();
                 String phone = customerDetails.getPhone();
-              
 
                 // Make a request to the external API with login_id and password
                 String apiUrl = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create"; // Replace
-                                                                                                              // with
-                HttpHeaders headers = new HttpHeaders();                                                                                           // the
-                headers.setBearerAuth(bearerToken);    
+                                                                                                            // with
+                HttpHeaders headers = new HttpHeaders(); // the
+                headers.setBearerAuth(bearerToken);
                 Map<String, Object> requestBodyMap = new HashMap<>();
                 requestBodyMap.put("first_name", first_name);
                 requestBodyMap.put("last_name", last_name);
@@ -210,61 +214,59 @@ System.out.println("we are here to add a new customer");
                 requestBodyMap.put("email", email);
                 requestBodyMap.put("phone", phone);
 
-              System.out.println(requestBodyMap);
-                
-                
-//             
-                HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBodyMap, headers);                                                                          // API URL
+                System.out.println(requestBodyMap);
+
+                //
+                HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBodyMap, headers); // API URL
                 RestTemplate restTemplate = new RestTemplate();
-//
-//                // Create the request body to send to the external API
-//
-//                // Make the request to the external API
-//                
+                //
+                // // Create the request body to send to the external API
+                //
+                // // Make the request to the external API
+                //
                 String externalApiResponse = null;
                 try {
 
-                        externalApiResponse = restTemplate.exchange(apiUrl,HttpMethod.POST, requestEntity, String.class)
+                        externalApiResponse = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity,
+                                        String.class)
                                         + "";
                         System.out.println(externalApiResponse);
-                       
 
                 } catch (Exception e) {
                         System.out.println("error is working");
                         System.out.println(e);
 
                 }
-                 System.out.println(externalApiResponse);
-                 externalApiResponse = getDataFromcreateCustomer(externalApiResponse);
-                 if(externalApiResponse != null && externalApiResponse.equals("201"))
-                 {
-                	 return new ResponseEntity<>(new ApiResponse("Customer has been created"),HttpStatus.CREATED); 
-                 }
-                 return new ResponseEntity<>(new ApiResponse("Customer couldn't be created"),HttpStatus.INTERNAL_SERVER_ERROR);
-
-   
+                System.out.println(externalApiResponse);
+                externalApiResponse = getDataFromcreateCustomer(externalApiResponse);
+                if (externalApiResponse != null && externalApiResponse.equals("201")) {
+                        return new ResponseEntity<>(new ApiResponse("Customer has been created"), HttpStatus.CREATED);
+                }
+                return new ResponseEntity<>(new ApiResponse("Customer couldn't be created"),
+                                HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
+
         @PostMapping("/updateCustomer")
-        public ResponseEntity<?> updateCustomer(@RequestParam("uuid") String uuid,@RequestHeader("Authorization") String bearerToken,@RequestBody CustomerDetails customerDetails) {
+        public ResponseEntity<?> updateCustomer(@RequestParam("uuid") String uuid,
+                        @RequestHeader("Authorization") String bearerToken,
+                        @RequestBody CustomerDetails customerDetails) {
                 // Replace LoginRequest with your actual request body class
                 // The class should have fields for login_id and password
-System.out.println("we are here to update our  customer");
+                System.out.println("we are here to update our  customer");
                 // Get the login_id and password from the request body
                 String first_name = customerDetails.getFirst_name();
                 String last_name = customerDetails.getLast_name();
                 String street = customerDetails.getStreet();
                 String address = customerDetails.getAddress();
-                String city= customerDetails.getCity();
+                String city = customerDetails.getCity();
                 String state = customerDetails.getState();
                 String email = customerDetails.getEmail();
                 String phone = customerDetails.getPhone();
-              
 
-        
-                String apiUrl = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=update&uuid=" + uuid; 
-                HttpHeaders headers = new HttpHeaders();                                                                                           // the
-                headers.setBearerAuth(bearerToken);    
+                String apiUrl = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=update&uuid=" + uuid;
+                HttpHeaders headers = new HttpHeaders(); // the
+                headers.setBearerAuth(bearerToken);
                 Map<String, Object> requestBodyMap = new HashMap<>();
                 requestBodyMap.put("first_name", first_name);
                 requestBodyMap.put("last_name", last_name);
@@ -275,37 +277,32 @@ System.out.println("we are here to update our  customer");
                 requestBodyMap.put("email", email);
                 requestBodyMap.put("phone", phone);
 
-              System.out.println(requestBodyMap);
+                System.out.println(requestBodyMap);
                 System.out.println(uuid);
                 System.out.println(bearerToken);
-                
-          
-                HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBodyMap, headers);                                                                          // API URL
+
+                HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBodyMap, headers); // API URL
                 RestTemplate restTemplate = new RestTemplate();
-           
+
                 String externalApiResponse = null;
-               
 
-                        externalApiResponse = restTemplate.exchange(apiUrl,HttpMethod.POST, requestEntity, String.class)
-                                        + "";
-                        System.out.println(externalApiResponse);
-                       
+                externalApiResponse = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class)
+                                + "";
+                System.out.println(externalApiResponse);
 
-//                } catch (Exception e) {
-//                        System.out.println("error is working");
-//                        System.out.println(e);
-//
-//                }
-                 System.out.println(externalApiResponse);
-                 externalApiResponse = getDataFromcreateCustomer(externalApiResponse);
-                 if(externalApiResponse!=null && externalApiResponse.equals("200"))
-                 {
-                	 return new ResponseEntity<>(new ApiResponse("Customer has been updated"),HttpStatus.CREATED); 
-                 }
-                 return null;
-//                 return new ResponseEntity<>(new ApiResponse("Customer couldn't be created"),HttpStatus.INTERNAL_SERVER_ERROR);
-
-   
+                // } catch (Exception e) {
+                // System.out.println("error is working");
+                // System.out.println(e);
+                //
+                // }
+                System.out.println(externalApiResponse);
+                externalApiResponse = getDataFromcreateCustomer(externalApiResponse);
+                if (externalApiResponse != null && externalApiResponse.equals("200")) {
+                        return new ResponseEntity<>(new ApiResponse("Customer has been updated"), HttpStatus.CREATED);
+                }
+                return null;
+                // return new ResponseEntity<>(new ApiResponse("Customer couldn't be
+                // created"),HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
