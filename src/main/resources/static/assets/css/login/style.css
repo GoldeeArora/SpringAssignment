@@ -1,0 +1,35 @@
+  /* CSS styles for the login page */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      margin: 0 auto;
+      max-width: 300px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: blue; /* Set the background color to blue */
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkblue; /* Change color on hover */
+    }
+    #loginMessage {
+      text-align: center;
+    }

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <style>
+    body {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    width: 40%;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 25%;
+    padding: 10px;
+    background-color: #0074D9; /* Change the background color to blue (#0074D9) */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Change the hover background color to a darker shade of blue (#0056b3) */
+}
+
+span {
+    display: block;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+span[id$="Error"] {
+    color: red;
+    display: none;
+}
+    
+    </style>
+</head>
+<body>
+    <h1 id="heading">Add Customer</h1>
+    <form id="addCustomerForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <span id="firstNameError" style="color: red; display: none;">First Name is required</span>
+        <br>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <span id="lastNameError" style="color: red; display: none;">Last Name is required</span>
+        <br>
+
+        <label for="street">Street:</label>
+        <input type="text" id="street" name="street" required>
+        <span id="streetError" style="color: red; display: none;">Street is required</span>
+        <br>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+        <span id="addressError" style="color: red; display: none;">Address is required</span>
+        <br>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+        <span id="cityError" style="color: red; display: none;">City is required</span>
+        <br>
+
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required>
+        <span id="stateError" style="color: red; display: none;">State is required</span>
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <span id="emailError" style="color: red; display: none;">Please enter a valid Email address</span>
+        <br>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required>
+        <span id="phoneError" style="color: red; display: none;">Must be of length 10</span>
+        <br>
+
+    </form>
+        <button type="button" onclick="validateForm()" id="button">Add Customer</button>
+
+    <script>
+        function validateForm() {
+            const firstName = document.getElementById("firstName");
+            const lastName = document.getElementById("lastName");
+            const street = document.getElementById("street");
+            const address = document.getElementById("address");
+            const city = document.getElementById("city");
+            const state = document.getElementById("state");
+            const email = document.getElementById("email");
+            const phone = document.getElementById("phone");
+
+            if (firstName.value.trim() === "") {
+                document.getElementById("firstNameError").style.display = "inline";
+                return false;
+            }
+
+            else if (lastName.value.trim() === "") {
+                document.getElementById("lastNameError").style.display = "inline";
+                return false;
+            }
+
+            else if (street.value.trim() === "") {
+                document.getElementById("streetError").style.display = "inline";
+                return false;
+            }
+
+            else if (address.value.trim() === "") {
+                document.getElementById("addressError").style.display = "inline";
+                return false;
+            }
+
+            else if (city.value.trim() === "") {
+                document.getElementById("cityError").style.display = "inline";
+                return false;
+            }
+
+            else if (state.value.trim() === "") {
+                document.getElementById("stateError").style.display = "inline";
+                return false;
+            }
+
+            else if (email.value.trim() === "") {
+                document.getElementById("emailError").style.display = "inline";
+                return false;
+            }
+
+            else if (phone.value.trim() === "") {
+                document.getElementById("phoneError").style.display = "inline";
+                return false;
+            }
+            const phoneRegex = /^\d+$/;
+            const phoneValue = phone.value.trim();
+   
+            if (!phoneRegex.test(phoneValue)) {
+            	document.getElementById("phoneError").innerText = "Must be a number";
+                document.getElementById("phoneError").style.display = "inline";
+                
+                return false;
+            }
+            console.log(phoneValue);
+            console.log(phoneValue.length);
+        if(phoneValue.length>10)
+        	{
+        	document.getElementById("phoneError").innerText = "lenght must be less than 11";
+        	 document.getElementById("phoneError").style.display = "inline";
+ return false;        	
+        	}
+perform(firstName.value.trim(),lastName.value.trim(),street.value.trim(),address.value.trim(),city.value.trim(),state.value.trim(),email.value.trim(),phone.value.trim());
+           
+        }
+        async function perform(first_name,last_name,street,address,city,state,email,phone)
+        {
+
+        	const bearerToken = localStorage.getItem('accessToken')
+        	const customerDetails = {
+        		first_name,
+        		last_name,
+        		street,
+        		address,
+        		city,
+        		state,
+        		email,
+        		phone
+        	}
+        	
+    const uuid=localStorage.getItem('uuid')
+   
+        	
+    await setTimeout(
+    		uuid==null ? 
+    				createCustomer(bearerToken,customerDetails)	 
+    				:  updateCustomer(bearerToken,customerDetails,uuid)
+    		
+    				,2000)
+    
+
+    	
+    		
+
+        	
+        	
+        	
+        	
+        	
+            
+        	
+        }
+        async function createCustomer(bearerToken,customerDetails)
+        {
+        	alert("creating...")
+        	const response = await fetch('http://localhost:8080/api/addCustomer', {
+                method: 'POST',
+                headers: {
+              	  'Content-Type': 'application/json',
+              	'Authorization': `Bearer ${bearerToken}`
+              	  },
+                body: JSON.stringify(customerDetails),
+              }
+              )
+        	const data = await response.json();
+        	if(data.responseEntity==="Customer has been created")
+    		{
+    		alert('Customer has been created');
+    		window.location.href="/customers_list.html";
+    		}
+        	else{
+        		alert("Sorry, couldn't able to create the customer")
+        	}
+        }
+        async function updateCustomer(bearerToken,customerDetails,uuid)
+        {
+        	
+        	alert("updating...");
+    		const response = await fetch(`http://localhost:8080/api/updateCustomer?uuid=${uuid}`,{
+    			method:'POST',
+    			 headers: {
+                 	  'Content-Type': 'application/json',
+                 	'Authorization': `Bearer ${bearerToken}`
+                 	  },
+                   body: JSON.stringify(customerDetails),
+                 }
+    		)
+    		
+    		const data = await response.json();
+    		console.log(data);
+    		if(data.responseEntity==="Customer has been updated")
+    		{
+    		alert('Customer has been updated');
+    		localStorage.removeItem("uuid");
+    		window.location.href="/customers_list.html";    		
+    		}
+    		else{
+    		  alert("Sorry, couldn't able to update the customer");	
+    		}
+    		
+        }
+        function changeUI()
+        {
+        	const uuid = localStorage.getItem("uuid");
+        	if(uuid!=null)
+        		{
+        		document.getElementById('button').innerHTML="Update Customer"
+        			document.getElementById("heading").innerHTML="Update Customer"
+        		}
+        	
+        }
+        window.onload = changeUI();
+        
+    </script>
+</body>
+</html>

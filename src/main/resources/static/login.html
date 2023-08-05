@@ -1,0 +1,80 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/login/style.css">
+</head>
+<body>
+  <h1>Login</h1>
+   <form id="loginForm">
+    <label for="login_id">Login_id:</label>
+    <input type="text" id="login_id" name="login_id" placeholder="login_id" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="password" required>
+    <br>
+    <button type="button" onclick="authenticateUser()">Login</button>
+  </form>
+  <p id="loginMessage"></p>
+
+  <script>
+    // Implement the authenticateUser() function to call the authentication API
+    // and handle the response
+    const makeApiRequest= (loginData)=>{
+    	alert('checking credentials');
+    	return fetch('http://localhost:8080/api/authenticate', {
+             method: 'POST',
+             headers: {
+           	  'Content-Type': 'application/json',
+                  
+           	  },
+             body: JSON.stringify(loginData),
+           }
+           )
+    }
+    
+     async function authenticateUser() {
+      // Get the input values from the form
+      const login_id = document.getElementById('login_id').value;
+      const password = document.getElementById('password').value;
+console.log("Hello buddy")
+      // Replace the following values with your actual valid credentials
+      const validEmail = 'test@sunbasedata.com';
+      const validPassword = 'Test@123';
+      const loginData = {
+    		  login_id,
+    		  password
+    		};
+      // Check if the input matches the valid credentials
+     if (login_id === validEmail && password === validPassword) {
+    	 try {
+    		    // Call the API and await the response
+    		    const response = await makeApiRequest(loginData);
+             console.log(response)
+    		    // Assuming the response is in JSON format
+    		    const data = await response.json();
+    		    if(data.externalData.access_token==null)
+    		    	{
+    		          document.getElementById('loginMessage').textContent = 'Unable to get the data.';
+    		    	}
+         localStorage.setItem("accessToken",data.externalData.access_token)
+    		    // Here, 'data' contains the response data
+    		    window.location.href = '/customers_list.html';
+    		    console.log(data);
+    		    // You can process the data as needed here
+    		  } catch (error) {
+    		    // Handle errors
+    		    console.error("Error:", error);
+    		  }
+    		}
+     else {
+    	    //         // Authentication failed
+    	           document.getElementById('loginMessage').textContent = 'Invalid credentials. Please try again.';
+    	    }
+      }
+    
+    
+  </script>
+</body>
+</html>

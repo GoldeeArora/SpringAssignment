@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customer List</title>
+  <style>
+  body{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  }
+    /* Add some basic styling to the table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+      button {
+      background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  cursor: pointer;
+  border-radius: 4px;
+    }
+
+    /* Hover effect */
+    button:hover {
+   background-color: #0056b3;
+    }
+
+    /* Focus effect */
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 5px #4CAF50;
+    }
+    #addCustomer{
+    margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Customer List</h2>
+  <table id="customerTable">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be dynamically added using JavaScript -->
+    </tbody>
+  </table>
+    <button id="addCustomer" onclick="add_customer()">Add Customer</button>
+
+  <script>
+  let data=null;
+  async function fetchData() {
+	  try {
+	    const bearerToken = localStorage.getItem('accessToken'); // Replace this with your actual bearer token
+        console.log(bearerToken)
+	    // Make the GET request to the API with the Authorization header
+	    const response = await fetch('http://localhost:8080/api/getAllCustomers', {
+          method: 'GET',
+          headers: {
+        	  'Content-Type': 'application/json',
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        });
+
+	    // Check if the response status is ok (2xx range)
+	    if (!response.ok) {
+	       console.error('Network response was not ok.');
+	    }
+//console.log(response);
+	    // Parse the response as JSON and return it
+	    data = response && await response.json();
+
+	    // Handle the data received from the API
+	
+	    if(!data.error)
+	    data =  JSON.parse(data.responseEntity);
+	    console.log(data);
+	    const tableBody = document.querySelector("#customerTable tbody");
+       if(data.error)
+    	   {
+    
+    	   const row = document.createElement("tr");
+    	   row.innerHTML = "<td colspan='8'>Cannot fetch customers.</td>";
+    	      
+    	   tableBody.appendChild(row);
+    	   }
+       if(data.length===0)
+    	   {
+    	   const row = document.createElement("tr");
+    	   row.innerHTML = "<td colspan='8'>No Customer Found.</td>";
+    	      
+    	   tableBody.appendChild(row);
+    	   }
+       if(data){
+    	   
+	      data.forEach(customer => {
+	        const row = document.createElement("tr");
+	        row.innerHTML = `
+	          <td>${customer.first_name}</td>
+	          <td>${customer.last_name}</td>
+	          <td>${customer.address}</td>
+	          <td>${customer.city}</td>
+	          <td>${customer.state}</td>
+	          <td>${customer.email}</td>
+	          <td>${customer.phone}</td>
+	          <td>
+	            <button onclick="editCustomer('${customer.uuid}')">Edit</button>
+	            <button onclick="deleteCustomer('${customer.uuid}')">Delete</button>
+	          </td>
+	        `;
+	        tableBody.appendChild(row);
+	      });
+	    // You can process the data as needed here
+
+       }
+	  } catch (error) {
+	    // Handle errors
+	    data = null;
+	    console.error('Error:', error);
+	  }
+	}
+ 
+
+    // Call the function to populate the table when the page loads
+
+    
+    // Function to handle edit action (implement your edit logic here)
+    function editCustomer(uuid) {
+    	localStorage.setItem("uuid",uuid)
+    	window.location.href='/add_customer.html';
+      // Implement your edit logic here
+      
+    }
+
+    // Function to handle delete action (implement your delete logic here)
+    async function  deleteCustomer(uuid) {
+      const bearerToken = localStorage.getItem('accessToken'); // Replace this with your actual bearer token
+       // console.log(bearerToken)
+       console.log(uuid)
+       alert("Deleting...")
+	    // Make the GET request to the API with the Authorization header
+	    const response = await fetch(`http://localhost:8080/api/deleteCustomer?uuid=${uuid}`, {
+          method: 'POST',
+          headers: {
+        	  'Content-Type': 'application/json',
+            'Authorization': `Bearer ${bearerToken}`
+          }
+        });
+      console.log(response);
+      // Implement your delete logic here
+
+      const deleteData = await response.json();
+      if(deleteData.responseEntity)
+    	  {
+alert("Delete operation has been performed")    	  
+      location.reload();
+    	  }
+
+    }
+   function add_customer(){
+	   window.location.href = "/add_customer.html"
+   }
+	// Call the async function
+	window.onload = fetchData();
+
+  </script>
+</body>
+</html>
