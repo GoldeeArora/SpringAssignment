@@ -177,6 +177,7 @@ alert("Delete operation has been performed")
 
     }
    function add_customer(){
+	   localStorage.removeItem("uuid");
 	   window.location.href = "/add_customer.html"
    }
 	// Call the async function
